@@ -6,16 +6,16 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CommandAnnotation {
 	
-	public static final String DEFAULT_MESSAGE = "ERROR";
+	public static final String DEFAULT_MESSAGE = "I/T";
 	
 	public static final int DEFAULT_INTEGER = 1;
 	
 
-	String 		command() 		default "ERROR";
+	String 		command() 		default DEFAULT_MESSAGE;
 
-	String[] 	aliases() 		default { "ERROR" };
+	String[] 	aliases() 		default { DEFAULT_MESSAGE };
 
-	String 		description() 	default "ERROR";
+	String 		description() 	default DEFAULT_MESSAGE;
 
 	int 		rankRequired() 	default 1;
 

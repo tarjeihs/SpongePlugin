@@ -4,20 +4,21 @@ import java.io.Serializable;
 import java.util.UUID;
 import org.bukkit.entity.Player;
 
-public abstract interface UserAccessor extends Serializable {
-	public abstract String getName();
+ interface UserAccessor extends Serializable {
 
-	public abstract void setName(String paramString);
+	 String getName();
 
-	public abstract int getRank();
+	 void setName(String name);
 
-	public abstract void setRank(int paramInt);
+	 int getRank();
 
-	public abstract UUID getUUID();
+	 void setRank(int rank);
 
-	public abstract void setUUID(UUID paramUUID);
+	 UUID getUUID();
 
-	public abstract Player getPlayer();
+	 void setUUID(UUID uuid);
 
-	public abstract void setPlayer(Player paramPlayer);
+	 Player getPlayer();
+
+	 void setPlayer(Player player);
 }

@@ -1,6 +1,8 @@
 package com.java.tarjeihs.plugin.user;
 
 import java.util.UUID;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class User implements UserAccessor {
@@ -15,12 +17,12 @@ public class User implements UserAccessor {
 
 	private int rank;
 
-	public User(UUID uuid) {
-		this(null, uuid, null, 0);
-	}
-
 	public User(Player player) {
-		this(player.getName(), player.getUniqueId(), player, 0);
+		this(player.getName(), player.getUniqueId(), player, 1);
+	}
+	
+	public User(UUID uuid) {
+		this(Bukkit.getPlayer(uuid).getName(), uuid, Bukkit.getPlayer(uuid), 1);
 	}
 
 	public User(String name, UUID uuid, Player player, int rank) {

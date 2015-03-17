@@ -1,8 +1,5 @@
 package com.java.tarjeihs.plugin.command;
 
-import com.java.tarjeihs.plugin.JPlugin;
-import com.java.tarjeihs.plugin.user.User;
-
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
@@ -14,6 +11,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R1.CraftServer;
 import org.bukkit.entity.Player;
 
+import com.java.tarjeihs.plugin.JPlugin;
+import com.java.tarjeihs.plugin.group.GroupHandler;
+import com.java.tarjeihs.plugin.group.InviteTable;
+import com.java.tarjeihs.plugin.user.User;
+import com.java.tarjeihs.plugin.user.UserHandler;
+
 public abstract class CommandHandler implements CommandExecutor, Colour {
 	
 	private String command = "N/A";
@@ -22,12 +25,17 @@ public abstract class CommandHandler implements CommandExecutor, Colour {
 	private int rank = 1;
 	private boolean use = true;
 	
-	@SuppressWarnings("unused")
 	private User user = null;
 	
 	protected JPlugin plugin = null;
 	
 	protected Player player = null;
+	
+	protected GroupHandler groupHandler = null;
+	
+	protected InviteTable inviterTable = new InviteTable(plugin);
+	
+	protected UserHandler userHandler = null;
 	
 	private final ReadCommandAnnotation readAnnotation = new ReadCommandAnnotation(getClass());
 	private static CommandMap commandMap = null;
@@ -35,7 +43,7 @@ public abstract class CommandHandler implements CommandExecutor, Colour {
 	static {
 		try {
 			if ((Bukkit.getServer() instanceof CraftServer)) {
-				Field field = CraftServer.class.getDeclaredField("commandMap");
+				final Field field = CraftServer.class.getDeclaredField("commandMap");
 				field.setAccessible(true);
 				commandMap = (CommandMap) field.get(Bukkit.getServer());
 			}
@@ -46,7 +54,10 @@ public abstract class CommandHandler implements CommandExecutor, Colour {
 
 	public CommandHandler(JPlugin instance) {
 		this.plugin = instance;
-
+		
+		this.groupHandler = instance.getGroupHandler();
+		this.userHandler = instance.getUserHandler();
+		
 		this.readAnnotation.register();
 
 		this.command = this.readAnnotation.getCommand();
@@ -62,17 +73,20 @@ public abstract class CommandHandler implements CommandExecutor, Colour {
 		if (this.command != null) regCommand.setExecutor(this);
 		if (this.aliases != null) regCommand.setAliases(Arrays.asList(this.aliases));
 		if (this.description != null) regCommand.setDescription(this.description);
+		
+		StoredCommand.addCommand(command, description);
 	}
 
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		if (this.use) {
 			if (sender instanceof Player) {
 				this.player = ((Player) sender);
-				User user = this.plugin.getUserHandler().getUser(this.player);
+				User user = this.plugin.getUserHandler().getUser(player);
 				if (user.getRank() >= this.rank) {
 					return execute(user, command, args);
+				} else {
+					this.player.sendMessage(RED + "Du har ikke tilgang for denne kommandoen.");
 				}
-				this.player.sendMessage(RED + "Du har ikke tilgang for denne kommandoen.");
 			} else {
 				System.out.println("Kommandoer er deaktivert for konsoll.");
 			}
@@ -103,10 +117,14 @@ public abstract class CommandHandler implements CommandExecutor, Colour {
 
 	public static CommandMap getCommandMap() {
 		if (commandMap == null) {
-			return null;
+			throw new NullPointerException("commandmap cannot be null");
 		}
 		return commandMap;
 	}
+	
+	protected User getUser() {
+		return user;
+	}
 
-	public abstract boolean execute(User paramUser, Command paramCommand, String[] paramArrayOfString);
+	public abstract boolean execute(User user, Command command, String[] args);
 }

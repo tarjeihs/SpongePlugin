@@ -36,10 +36,16 @@ public class UserHandler extends MySQLAccessor {
 	}
 
 	public int getRank(Player player) {
-		String query = "SELECT rank FROM `user` WHERE name=?";
+		String query = "SELECT rank FROM user WHERE name=?";
 		int id = Integer.parseInt(get(query, new Object[] { player.getName() }, new Object[] { "rank" }));
 		if (!(id > 0)) id = 1;
 		return id;
+	}
+	
+	public void setRank(Player victim, int rank) {
+		String query = "UPDATE user SET rank=? WHERE name=?";
+		
+		executeUpdate(query, new Object[]{rank, victim.getName()});
 	}
 
 	public UUID getUUID_(Player player) {
@@ -51,6 +57,32 @@ public class UserHandler extends MySQLAccessor {
 
 		return uuid_;
 	}
+	
+	public ChatColor getSuffix(Player player) {
+		int rank = getRank(player);
+		ChatColor suffix = null;
+		switch (rank) {
+		case 1:
+			suffix = ChatColor.GRAY;
+			break;
+		case 2:
+			suffix = ChatColor.YELLOW;
+			break;
+		case 3:
+			suffix = ChatColor.BLUE;
+			break;
+		case 4:
+			suffix = ChatColor.AQUA;
+			break;
+		case 5:
+			suffix = ChatColor.RED;
+			break;
+		default:
+			suffix = ChatColor.YELLOW;
+			break;
+		}
+		return suffix;
+	}
 
 	public String getPrefix(Player player) {
 		int rank = getRank(player);
@@ -60,13 +92,13 @@ public class UserHandler extends MySQLAccessor {
 			prefix = ChatColor.GRAY + "[Gjest] ";
 			break;
 		case 2:
-			prefix = ChatColor.GREEN + "[Bruker] ";
+			prefix = ChatColor.YELLOW + "";
 			break;
 		case 3:
 			prefix = ChatColor.BLUE + "[Mod] ";
 			break;
 		case 4:
-			prefix = ChatColor.AQUA + "[Dev] ";
+			prefix = ChatColor.AQUA + "";
 			break;
 		case 5:
 			prefix = ChatColor.DARK_RED + "[" + ChatColor.RED + "Admin" + ChatColor.DARK_RED + "] ";
@@ -117,7 +149,7 @@ public class UserHandler extends MySQLAccessor {
 			User user = new User(getName(players), getUUID_(players), players, getRank(players));
 			loadUser(players, user);
 		}
-		Regex.println("Players has been loaded. Amount of players: " + collection.size());
+		Regex.println("Players has been loaded. Amount of players: " + userData.size());
 	}
 
 	public void loadUser(Player player, User user) {

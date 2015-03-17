@@ -14,7 +14,7 @@ public class Regex {
 	}
 
 	public static void println(String message) {
-		System.out.println("[serr.no] " + message + "\n");
+		System.out.println("[serr] " + message + "\n");
 	}
 
 	public static void printf(String message, String format) {

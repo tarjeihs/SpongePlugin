@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 public class ReadCommandAnnotation {
 
 	private final Class<?> clazz;
-	private final String DEFAULT_ERROR = "ERROR";
+	private final String DEFAULT_ERROR = "I/T";
 	private final int DEFAULT_INTEGER = 1;
 	
 	private String command;
@@ -38,21 +38,21 @@ public class ReadCommandAnnotation {
 		if (this.aliases != null) {
 			return this.aliases;
 		}
-		return new String[] { "ERROR" };
+		return new String[] { DEFAULT_ERROR };
 	}
 
 	public String getCommand() {
 		if (this.command != null) {
 			return this.command;
 		}
-		return "ERROR";
+		return DEFAULT_ERROR;
 	}
 
 	public String getDescription() {
 		if (this.description != null) {
 			return this.description;
 		}
-		return "ERROR";
+		return DEFAULT_ERROR;
 	}
 
 	public boolean isUseable() {

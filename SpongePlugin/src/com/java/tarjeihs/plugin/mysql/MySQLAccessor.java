@@ -20,7 +20,7 @@ public class MySQLAccessor {
 	 * 
 	 * @param query The query to be asked
 	 * @param array Replaced question-marks from PS
-	 * @param contains If a object(String or Integer) is inside ResultSet
+	 * @param contains Take out a object (int or string) from ResultSet
 	 * @param compare Compare the resultset
 	 * @return Whether the compare was true or false
 	 */
@@ -75,7 +75,8 @@ public class MySQLAccessor {
 //			Regex.println(e.getMessage());
 //		} finally {
 //			if (ps != null) { try { ps.close(); ps = null; } catch (SQLException ignored) {}}
-//		}
+//			if (rs != null) { try { rs.close(); rs = null; } catch (SQLException ignored) {}}
+//	    }
 //		return false;
 //	}
 
@@ -107,7 +108,8 @@ public class MySQLAccessor {
 				}
 			}
 		} catch (SQLException e) {
-			Regex.println(e.getMessage());
+//			Regex.println(e.getMessage() + " " + e.getErrorCode() + " " + this.getClass().getName());
+			e.printStackTrace();
 		} finally {
 			if (ps != null) { try { ps.close(); ps = null; } catch (SQLException ignored) {}}
 			if (rs != null) { try { rs.close(); rs = null; } catch (SQLException ignored) {}}
@@ -131,18 +133,19 @@ public class MySQLAccessor {
 						ps.setObject(i + 1, array[i]);
 					}
 				}
-			} else {
-				return false;
+				ps.executeUpdate();
+				return true;
 			}
-			ps.executeUpdate();
-			return true;
 		} catch (SQLException e) {
 			Regex.println(e.getMessage());
+			
+			e.printStackTrace();
+			
 			return false;
 		} finally {
 			if (ps != null) { try { ps.close(); ps = null; } catch (SQLException ignored) {}}
-			if (conn != null) { try { conn.close(); conn = null; } catch (SQLException ignored) {}}
 		}
+		return false;
 	}
 
 	protected final boolean executeUpdate(String query) {
