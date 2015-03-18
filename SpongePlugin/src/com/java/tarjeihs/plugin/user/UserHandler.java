@@ -34,6 +34,10 @@ public class UserHandler extends MySQLAccessor {
 	public boolean isIdenticalUUIDPlayer() {
 		return false;
 	}
+	
+	public void setVisitorMode(Player player) {
+		
+	}
 
 	public int getRank(Player player) {
 		String query = "SELECT rank FROM user WHERE name=?";
@@ -148,7 +152,11 @@ public class UserHandler extends MySQLAccessor {
 		for (Player players : collection) {
 			User user = new User(getName(players), getUUID_(players), players, getRank(players));
 			loadUser(players, user);
+		
+			players.setDisplayName(getPrefix(players) + players.getName());
+			players.setPlayerListName(getSuffix(players) + players.getName());
 		}
+		
 		Regex.println("Players has been loaded. Amount of players: " + userData.size());
 	}
 

@@ -3,15 +3,13 @@ package com.java.tarjeihs.plugin.group;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.entity.Player;
-
 public class GroupData implements GroupAccessor {
 	
 	private String groupName;
 	
 	private String groupOwner;
 	
-	private List<Player> members;
+	private List<String> members;
 	
 	private int groupId;
 
@@ -22,7 +20,7 @@ public class GroupData implements GroupAccessor {
 		
 		this.groupOwner = groupOwner;
 		
-		this.members = new ArrayList<Player>();
+		this.members = new ArrayList<String>();
 	}
 	
 	@Override
@@ -59,17 +57,17 @@ public class GroupData implements GroupAccessor {
 	}
 
 	@Override
-	public List<Player> getGroupMembers() {
+	public List<String> getGroupMembers() {
 		return members;
 	}
 
 	@Override
-	public void setGroupMembers(Player player) {
+	public void setGroupMembers(String player) {
 		this.members.add(player);
 	}
 
 	@Override
-	public void removeGroupMember(Player player) {
+	public void removeGroupMember(String player) {
 		this.members.remove(player);
 	}
 }

@@ -12,6 +12,7 @@ import org.bukkit.craftbukkit.v1_8_R1.CraftServer;
 import org.bukkit.entity.Player;
 
 import com.java.tarjeihs.plugin.JPlugin;
+import com.java.tarjeihs.plugin.Regex;
 import com.java.tarjeihs.plugin.group.GroupHandler;
 import com.java.tarjeihs.plugin.group.InviteTable;
 import com.java.tarjeihs.plugin.user.User;
@@ -19,9 +20,9 @@ import com.java.tarjeihs.plugin.user.UserHandler;
 
 public abstract class CommandHandler implements CommandExecutor, Colour {
 	
-	private String command = "N/A";
+	private String command = "I/T";
 	private String[] aliases = null;
-	private String description = "N/A";
+	private String description = "I/T";
 	private int rank = 1;
 	private boolean use = true;
 	
@@ -33,7 +34,7 @@ public abstract class CommandHandler implements CommandExecutor, Colour {
 	
 	protected GroupHandler groupHandler = null;
 	
-	protected InviteTable inviterTable = new InviteTable(plugin);
+	protected InviteTable inviteTable;
 	
 	protected UserHandler userHandler = null;
 	
@@ -48,7 +49,7 @@ public abstract class CommandHandler implements CommandExecutor, Colour {
 				commandMap = (CommandMap) field.get(Bukkit.getServer());
 			}
 		} catch (Exception e) {
-			System.out.println("Error: " + e.getMessage());
+			Regex.println("Error: " + e.getMessage());
 		}
 	}
 
@@ -57,6 +58,8 @@ public abstract class CommandHandler implements CommandExecutor, Colour {
 		
 		this.groupHandler = instance.getGroupHandler();
 		this.userHandler = instance.getUserHandler();
+		
+		this.inviteTable = new InviteTable(instance);
 		
 		this.readAnnotation.register();
 

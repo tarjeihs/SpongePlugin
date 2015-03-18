@@ -13,7 +13,7 @@ public class ConfigurationFile {
 	private final HashMap<String, ?> configurationMap;
 	private final YamlConfiguration config;
 
-	public ConfigurationFile(String filePath, HashMap<String, Object> configurationMap) {
+	public ConfigurationFile(String filePath, HashMap<String, ?> configurationMap) {
 		this.configurationMap = configurationMap;
 		if (this.file == null) {
 			this.file = new File(filePath);
@@ -22,8 +22,8 @@ public class ConfigurationFile {
 		
 		try {
 			if (!this.file.exists()) {
-				for (Map.Entry<String, Object> e : configurationMap.entrySet()) {
-					this.config.set((String) e.getKey(), e.getValue());
+				for (Map.Entry<String, ?> e : configurationMap.entrySet()) {
+					this.config.set(e.getKey(), e.getValue());
 				}
 				this.config.save(this.file);
 			} else {
@@ -42,7 +42,7 @@ public class ConfigurationFile {
 		return this.file;
 	}
 
-	public HashMap<?, ?> getConfigurationMap() {
+	public HashMap<String, ?> getConfigurationMap() {
 		return this.configurationMap;
 	}
 }

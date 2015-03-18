@@ -2,8 +2,6 @@ package com.java.tarjeihs.plugin.group;
 
 import java.util.List;
 
-import org.bukkit.entity.Player;
-
 public interface GroupAccessor {
 	
 	final int groupOwnerID = 1;
@@ -20,10 +18,10 @@ public interface GroupAccessor {
 	
 	void setGroupOwner(String owner);
 	
-	List<Player> getGroupMembers();
+	List<String> getGroupMembers();
 	
-	void setGroupMembers(Player player);
+	void setGroupMembers(String player);
 	
-	void removeGroupMember(Player player);
+	void removeGroupMember(String player);
 	
 }

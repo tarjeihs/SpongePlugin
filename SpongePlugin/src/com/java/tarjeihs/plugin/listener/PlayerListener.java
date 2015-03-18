@@ -67,6 +67,7 @@ public class PlayerListener implements Listener {
 					this.userHandler.getRank(player));
 			
 		}
+		
 		this.userHandler.loadUser(player, user);
 		
 		if (this.groupHandler.hasGroup(player)) {
@@ -77,6 +78,7 @@ public class PlayerListener implements Listener {
 			groupData = new GroupData(groupName, groupOwner, guid);
 			
 			this.groupHandler.loadGroup(player, groupData);	
+			
 		}
 		
 		TitleManager.sendTitle(player, fadeIn, stay, fadeOut,
@@ -92,7 +94,7 @@ public class PlayerListener implements Listener {
 
 		player.playSound(player.getLocation(), Sound.SUCCESSFUL_HIT, 100, 100);
 
-		event.setJoinMessage(this.userHandler.getPrefix(player) + player.getName() + ChatColor.GREEN + " " + "har logget på.");
+		event.setJoinMessage(this.userHandler.getSuffix(player) + player.getName() + ChatColor.GREEN + " " + "har logget på.");
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -103,6 +105,6 @@ public class PlayerListener implements Listener {
 		
 		this.groupHandler.unloadGroup(player);
 
-		event.setQuitMessage(this.userHandler.getPrefix(player) + player.getName() + ChatColor.RED + " " + "har logget av.");
+		event.setQuitMessage(this.userHandler.getSuffix(player) + player.getName() + ChatColor.RED + " " + "har logget av.");
 	}
 }

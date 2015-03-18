@@ -8,12 +8,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.java.tarjeihs.plugin.command.CECommand;
 import com.java.tarjeihs.plugin.command.CommandHandler;
 import com.java.tarjeihs.plugin.command.StoredCommand;
 import com.java.tarjeihs.plugin.command.custom.GroupCommand;
 import com.java.tarjeihs.plugin.command.custom.HelpCommand;
 import com.java.tarjeihs.plugin.command.custom.PingCommand;
 import com.java.tarjeihs.plugin.command.custom.RankCommand;
+import com.java.tarjeihs.plugin.command.custom.SpawnCommand;
 import com.java.tarjeihs.plugin.configuration.ConfigurationFile;
 import com.java.tarjeihs.plugin.configuration.SQLReference;
 import com.java.tarjeihs.plugin.group.GroupHandler;
@@ -44,7 +46,7 @@ public class JPlugin extends JavaPlugin {
 
 		this.userHandler.loadUsers(Bukkit.getOnlinePlayers());
 		this.groupHandler.loadGroup(Bukkit.getOnlinePlayers());
-		
+				
 		Regex.println("Plugin is activated with no errors detected while loading.");
 	}
 
@@ -80,6 +82,10 @@ public class JPlugin extends JavaPlugin {
 		rankCommand.register();
 		CommandHandler helpCommand = new HelpCommand(this);
 		helpCommand.register();
+		CommandHandler spawnCommand = new SpawnCommand(this);
+		spawnCommand.register();
+		CommandHandler ceCommand = new CECommand(this);
+		ceCommand.register();
 	}
 
 	public void initializeConfigurations() {
@@ -99,14 +105,6 @@ public class JPlugin extends JavaPlugin {
 		SQLReference.MYSQL_DATABASE_USERNAME = this.sqlConfig.getConfig().getString("sql.database.username");
 		SQLReference.MYSQL_DATABASE_PASSWORD = this.sqlConfig.getConfig().getString("sql.database.password");
 		SQLReference.MYSQL_DATABASE_PORT = this.sqlConfig.getConfig().getInt("sql.database.port");
-		
-		
-		try {
-			Thread.sleep(5000);
-			System.out.println("Thread sleeping for 5k");
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		
 		HashMap<String, Object> config = new HashMap<String, Object>();
 		
