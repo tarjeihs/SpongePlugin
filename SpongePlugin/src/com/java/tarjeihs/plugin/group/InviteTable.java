@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import com.java.tarjeihs.plugin.JPlugin;
@@ -19,48 +18,55 @@ public class InviteTable extends GroupHandler {
 	}
 	
 	public void sendInvite(Player to, Player from) {
-		executeUpdate("INSERT INTO invitetable (invited, inviter) VALUES (?, ?)", new Object[]{
-				to.getUniqueId().toString(), from.getUniqueId().toString()
+		int groupId = getGroupId(from);
+		
+		executeUpdate("INSERT INTO invitetable (invited, inviter, groupId) VALUES (?, ?, ?)", new Object[]{
+				to.getUniqueId().toString(), from.getUniqueId().toString(), groupId
 		});
 	}
 	
-//	public void acceptInvite(Player to, int groupId) {
-//		executeUpdate("DELETE FROM invitetable WHERE invited=? AND groupId=?", new Object[]{
-//				to.getUniqueId().toString(), groupId
-//		});
-//		
-//		String groupName = getGroupName(groupId);
-//		
-//		String groupOwner = getGroupOwner(groupId);
-//		
-//		GroupData groupData = new GroupData(groupName, groupOwner, groupId);
-//		
-//		loadGroup(to, groupData);
-//		
-//		becomeMember(to, groupId);
-//	}
-	
-	public void declineInvite(Player to, Player from) {
-		executeUpdate("DELETE FROM invitetable WHERE invited=? AND inviter=? AND groupId=?", new Object[]{
-				to.getUniqueId().toString(), from.getUniqueId().toString(), getGroupId(from)
+	public void acceptInvite(Player to, int groupId) {
+		executeUpdate("DELETE FROM invitetable WHERE invited=?", new Object[]{
+				to.getUniqueId().toString()
 		});
+	}
+	
+	public void declineInvite(Player to, int groupId) {
+		executeUpdate("DELETE FROM invitetable WHERE invited=? AND groupId=?", new Object[]{
+				to.getUniqueId().toString(), groupId
+		});
+	}
+	
+	public boolean hasInviteFrom(Player player, int groupId) {
+		String query = "SELECT groupId FROM invitetable WHERE invited=?";
+		
+		int id = Integer.parseInt(get(query, new Object[]{
+				player.getUniqueId().toString()
+		}, new Object[]{
+				"groupId"
+		}));
+		
+		if (id == groupId) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public List<String> getInvites(Player player) {
 		String query = "SELECT * FROM invitetable WHERE invited=?";
 		Connection conn = null;
 		ResultSet rs = null;
-		List<String> invites = new ArrayList<String>();
+		ArrayList<String> invites = new ArrayList<String>();
 		try {
 			conn = getConnection();
 			PreparedStatement ps = conn.prepareStatement(query);
-			
+								
 			ps.setString(1, player.getUniqueId().toString());
-					
+								
 			rs = ps.executeQuery();
-			
 			while (rs.next()) {
-				invites.add(rs.getString("inviter"));
+				invites.add(rs.getString("inviter") + ":" + rs.getInt("groupId"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

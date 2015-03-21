@@ -12,11 +12,11 @@ import org.bukkit.craftbukkit.v1_8_R1.CraftServer;
 import org.bukkit.entity.Player;
 
 import com.java.tarjeihs.plugin.JPlugin;
-import com.java.tarjeihs.plugin.Regex;
 import com.java.tarjeihs.plugin.group.GroupHandler;
 import com.java.tarjeihs.plugin.group.InviteTable;
 import com.java.tarjeihs.plugin.user.User;
 import com.java.tarjeihs.plugin.user.UserHandler;
+import com.java.tarjeihs.plugin.utilities.Regex;
 
 public abstract class CommandHandler implements CommandExecutor, Colour {
 	
@@ -34,7 +34,7 @@ public abstract class CommandHandler implements CommandExecutor, Colour {
 	
 	protected GroupHandler groupHandler = null;
 	
-	protected InviteTable inviteTable;
+	protected InviteTable inviteTable = null;
 	
 	protected UserHandler userHandler = null;
 	
@@ -59,7 +59,7 @@ public abstract class CommandHandler implements CommandExecutor, Colour {
 		this.groupHandler = instance.getGroupHandler();
 		this.userHandler = instance.getUserHandler();
 		
-		this.inviteTable = new InviteTable(instance);
+		this.inviteTable = this.groupHandler.getInviteTable();
 		
 		this.readAnnotation.register();
 
@@ -77,7 +77,10 @@ public abstract class CommandHandler implements CommandExecutor, Colour {
 		if (this.aliases != null) regCommand.setAliases(Arrays.asList(this.aliases));
 		if (this.description != null) regCommand.setDescription(this.description);
 		
-		StoredCommand.addCommand(command, description);
+		if (use) {
+			if (description != "I/T" || description != null)
+				StoredCommand.addCommand(command, description);
+		}
 	}
 
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
@@ -85,7 +88,7 @@ public abstract class CommandHandler implements CommandExecutor, Colour {
 			if (sender instanceof Player) {
 				this.player = ((Player) sender);
 				User user = this.plugin.getUserHandler().getUser(player);
-				if (user.getRank() >= this.rank) {
+				if (user.getRank() >= this.rank || user.getPlayer().isOp()) {
 					return execute(user, command, args);
 				} else {
 					this.player.sendMessage(RED + "Du har ikke tilgang for denne kommandoen.");

@@ -2,18 +2,19 @@ package com.java.tarjeihs.plugin.group;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class GroupData implements GroupAccessor {
 	
 	private String groupName;
 	
-	private String groupOwner;
+	private UUID groupOwner;
 	
 	private List<String> members;
 	
 	private int groupId;
 
-	public GroupData(String groupName, String groupOwner, int groupId) {		
+	public GroupData(String groupName, UUID groupOwner, int groupId) {		
 		this.groupName = groupName;
 		
 		this.groupId = groupId;
@@ -41,16 +42,6 @@ public class GroupData implements GroupAccessor {
 	public void setGroupName(String name) {
 		this.groupName = name;
 	}
-
-	@Override
-	public String getGroupOwner() {
-		return groupOwner;
-	}
-
-	@Override
-	public void setGroupOwner(String owner) {
-		this.groupOwner = owner;
-	}
 	
 	public int getGroupOwnerID() {
 		return groupOwnerID;
@@ -69,5 +60,15 @@ public class GroupData implements GroupAccessor {
 	@Override
 	public void removeGroupMember(String player) {
 		this.members.remove(player);
+	}
+
+	@Override
+	public UUID getGroupOwner() {
+		return groupOwner;
+	}
+
+	@Override
+	public void setGroupOwner(UUID owner) {
+		this.groupOwner = owner;
 	}
 }

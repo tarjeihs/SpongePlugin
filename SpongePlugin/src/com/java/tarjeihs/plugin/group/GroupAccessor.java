@@ -1,6 +1,7 @@
 package com.java.tarjeihs.plugin.group;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface GroupAccessor {
 	
@@ -14,9 +15,9 @@ public interface GroupAccessor {
 	
 	void setGroupName(String name);	
 	
-	String getGroupOwner();
+	UUID getGroupOwner();
 	
-	void setGroupOwner(String owner);
+	void setGroupOwner(UUID owner);
 	
 	List<String> getGroupMembers();
 	

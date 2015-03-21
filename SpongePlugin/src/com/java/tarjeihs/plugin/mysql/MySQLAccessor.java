@@ -1,7 +1,7 @@
 package com.java.tarjeihs.plugin.mysql;
 
 import com.java.tarjeihs.plugin.JPlugin;
-import com.java.tarjeihs.plugin.Regex;
+import com.java.tarjeihs.plugin.utilities.Regex;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class MySQLAccessor {
-	private final JPlugin plugin;
+	protected final JPlugin plugin;
 
 	public MySQLAccessor(JPlugin instance) {
 		this.plugin = instance;

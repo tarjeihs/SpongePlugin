@@ -1,12 +1,15 @@
 package com.java.tarjeihs.plugin.user;
 
 import com.java.tarjeihs.plugin.JPlugin;
-import com.java.tarjeihs.plugin.Regex;
 import com.java.tarjeihs.plugin.mysql.MySQLAccessor;
+import com.java.tarjeihs.plugin.utilities.Regex;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
+
 import net.md_5.bungee.api.ChatColor;
+
 import org.bukkit.entity.Player;
 
 public class UserHandler extends MySQLAccessor {
@@ -51,6 +54,18 @@ public class UserHandler extends MySQLAccessor {
 		
 		executeUpdate(query, new Object[]{rank, victim.getName()});
 	}
+	
+	public String getNameFromUUID(String uuid) {
+		String query = "SELECT name FROM user WHERE uuid=?";
+		
+		String name = get(query, new Object[]{
+				uuid
+		}, new Object[]{
+				"name"
+		});
+		
+		return (name != null ? name : "Unknown User");
+	}
 
 	public UUID getUUID_(Player player) {
 		String uuid = getUUID(player);
@@ -73,10 +88,10 @@ public class UserHandler extends MySQLAccessor {
 			suffix = ChatColor.YELLOW;
 			break;
 		case 3:
-			suffix = ChatColor.BLUE;
+			suffix = ChatColor.AQUA;
 			break;
 		case 4:
-			suffix = ChatColor.AQUA;
+			suffix = ChatColor.BLUE;
 			break;
 		case 5:
 			suffix = ChatColor.RED;
@@ -99,10 +114,10 @@ public class UserHandler extends MySQLAccessor {
 			prefix = ChatColor.YELLOW + "";
 			break;
 		case 3:
-			prefix = ChatColor.BLUE + "[Mod] ";
+			prefix = ChatColor.AQUA + "";
 			break;
 		case 4:
-			prefix = ChatColor.AQUA + "";
+			prefix = ChatColor.DARK_BLUE + "[" + ChatColor.BLUE + "Mod" + ChatColor.DARK_BLUE + "] ";
 			break;
 		case 5:
 			prefix = ChatColor.DARK_RED + "[" + ChatColor.RED + "Admin" + ChatColor.DARK_RED + "] ";

@@ -8,29 +8,48 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.java.tarjeihs.plugin.command.CECommand;
 import com.java.tarjeihs.plugin.command.CommandHandler;
 import com.java.tarjeihs.plugin.command.StoredCommand;
+import com.java.tarjeihs.plugin.command.custom.AdminCommand;
+import com.java.tarjeihs.plugin.command.custom.CECommand;
+import com.java.tarjeihs.plugin.command.custom.ClearChatCommand;
+import com.java.tarjeihs.plugin.command.custom.DropCommand;
 import com.java.tarjeihs.plugin.command.custom.GroupCommand;
+import com.java.tarjeihs.plugin.command.custom.HealCommand;
 import com.java.tarjeihs.plugin.command.custom.HelpCommand;
+import com.java.tarjeihs.plugin.command.custom.ICommand;
+import com.java.tarjeihs.plugin.command.custom.KickCommand;
 import com.java.tarjeihs.plugin.command.custom.PingCommand;
 import com.java.tarjeihs.plugin.command.custom.RankCommand;
+import com.java.tarjeihs.plugin.command.custom.ServerCommand;
+import com.java.tarjeihs.plugin.command.custom.SetSpawnCommand;
 import com.java.tarjeihs.plugin.command.custom.SpawnCommand;
 import com.java.tarjeihs.plugin.configuration.ConfigurationFile;
 import com.java.tarjeihs.plugin.configuration.SQLReference;
+import com.java.tarjeihs.plugin.customitems.CustomItemLoader;
 import com.java.tarjeihs.plugin.group.GroupHandler;
+import com.java.tarjeihs.plugin.group.InviteTable;
+import com.java.tarjeihs.plugin.listener.BlockListener;
+import com.java.tarjeihs.plugin.listener.EntityListener;
 import com.java.tarjeihs.plugin.listener.PlayerListener;
 import com.java.tarjeihs.plugin.listener.ServerListener;
+import com.java.tarjeihs.plugin.listener.VehicleListener;
 import com.java.tarjeihs.plugin.mysql.MySQLAccessor;
 import com.java.tarjeihs.plugin.mysql.MySQLHandler;
+import com.java.tarjeihs.plugin.team.TeamBoard;
 import com.java.tarjeihs.plugin.user.UserHandler;
+import com.java.tarjeihs.plugin.utilities.Messenger;
+import com.java.tarjeihs.plugin.utilities.Regex;
 
 public class JPlugin extends JavaPlugin {
 	
 	private MySQLHandler sqlHandler = null;
+	private InviteTable inviteTable = new InviteTable(this);
 	private GroupHandler groupHandler = new GroupHandler(this);
 	private UserHandler userHandler = new UserHandler(this);
 	
+	private TeamBoard teamBoard = new TeamBoard();
+		
 	private ConfigurationFile sqlConfig;
 	private ConfigurationFile serverConfig;
 
@@ -39,14 +58,22 @@ public class JPlugin extends JavaPlugin {
 	
 	public void onEnable() {
 		this.initializeConfigurations();
+		
 		this.registerEvents();
 		this.registerCommands();
-		
+				
 		this.establishConnection();
-
+		
+		new CustomItemLoader(this);
+		new Messenger(this);
+		
+		CustomItemLoader.addSuperAxeRecipe();
+		
 		this.userHandler.loadUsers(Bukkit.getOnlinePlayers());
 		this.groupHandler.loadGroup(Bukkit.getOnlinePlayers());
-				
+		
+		loadBoards();
+								
 		Regex.println("Plugin is activated with no errors detected while loading.");
 	}
 
@@ -60,14 +87,21 @@ public class JPlugin extends JavaPlugin {
 		
 		CommandHandler.getCommandMap().clearCommands();
 		StoredCommand.clearCommands();
-
+		
 		Regex.println("Plugin is dispatched and everything has been unloaded successfully.");
+	}
+	
+	private void loadBoards() {
+		TeamBoard.createHealthbar();
 	}
 
 	private void registerEvents() {
 		PluginManager pluginManager = getServer().getPluginManager();
 		pluginManager.registerEvents(new PlayerListener(this), this);
 		pluginManager.registerEvents(new ServerListener(this), this);
+		pluginManager.registerEvents(new BlockListener(this), this);
+		pluginManager.registerEvents(new EntityListener(this), this);
+		pluginManager.registerEvents(new VehicleListener(this), this);
 	}
 
 	/**
@@ -86,6 +120,22 @@ public class JPlugin extends JavaPlugin {
 		spawnCommand.register();
 		CommandHandler ceCommand = new CECommand(this);
 		ceCommand.register();
+		CommandHandler serverCommand = new ServerCommand(this);
+		serverCommand.register();
+		CommandHandler kickCommand = new KickCommand(this);
+		kickCommand.register();
+		CommandHandler adminCommand = new AdminCommand(this);
+		adminCommand.register();
+		CommandHandler dropCommand = new DropCommand(this);
+		dropCommand.register();
+		CommandHandler setSpawnCommand = new SetSpawnCommand(this);
+		setSpawnCommand.register();
+		CommandHandler healCommand = new HealCommand(this);
+		healCommand.register();
+		CommandHandler clearchatCommand = new ClearChatCommand(this);
+		clearchatCommand.register();
+		CommandHandler iCommand = new ICommand(this);
+		iCommand.register();
 	}
 
 	public void initializeConfigurations() {
@@ -145,5 +195,13 @@ public class JPlugin extends JavaPlugin {
 
 	public final GroupHandler getGroupHandler() {
 		return this.groupHandler;
+	}
+
+	public InviteTable getInviteTable() {
+		return inviteTable;
+	}
+	
+	public TeamBoard getTeamBoard() {
+		return teamBoard;
 	}
 }

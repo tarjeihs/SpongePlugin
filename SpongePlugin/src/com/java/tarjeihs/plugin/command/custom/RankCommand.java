@@ -30,11 +30,36 @@ public class RankCommand extends CommandHandler {
 			this.userHandler.getUser(victim).setRank(rank);
 			this.userHandler.setRank(victim, rank);
 			
+			String rankType = "UDEFINERT";
+			
+			switch (rank) {
+			case 1:
+				rankType = "Gjest";
+				player.setOp(false);
+				break;
+			case 2:
+				rankType = "Bruker";
+				player.setOp(false);
+				break;
+			case 3:
+				rankType = "Utvikler";
+				player.setOp(false);
+				break;
+			case 4: 
+				rankType = "Moderator";
+				player.setOp(false);
+				break;
+			case 5:
+				rankType = "Administrator";
+				player.setOp(true);
+				break;
+			}
+			
 			victim.setDisplayName(this.userHandler.getPrefix(victim) + victim.getName());
 
 			victim.setPlayerListName(this.userHandler.getSuffix(victim) + victim.getName());
 			
-			Bukkit.broadcastMessage(GOLD + "Spillerranken til " + victim.getName() + " har blitt forandret til " + userHandler.getUser(victim).getRank());			
+			Bukkit.broadcastMessage(GOLD + "Spillerranken til " + victim.getName() + " har blitt forandret til " + rankType);			
 		
 			TitleManager.sendTitle(victim, 30, 50, 30, "{\"text\":\"\",\"extra\":[{\"text\":\"Gratulerer med ny rank!\",\"color\":\"blue\"}]}");
 			
