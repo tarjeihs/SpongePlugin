@@ -16,7 +16,8 @@ public class KickCommand extends CommandHandler {
 		super(instance);
 	}
 
-	@CommandAnnotation(command = "spark", rankRequired = 4)
+	@SuppressWarnings("deprecation")
+	@CommandAnnotation(command = "spark", rankRequired = 2)
 	@Override
 	public boolean execute(User user, Command command, String[] args) {
 		if (args.length == 0) {

@@ -48,17 +48,19 @@ public class VehicleListener implements Listener {
 		if (event.getVehicle() instanceof Minecart) {
 			if (event.getVehicle().getPassenger() instanceof Player) {
 				Player player = (Player) event.getVehicle().getPassenger();
-				Minecart minecart = (Minecart) event.getVehicle();
-				
-				
-				Vector vector = minecart.getVelocity();
+				if (player.getInventory().getBoots() != null && player.getInventory().getBoots().equals(new ItemStack(Material.GOLD_BOOTS))) {
+					Minecart minecart = (Minecart) event.getVehicle();
 
-				vector.setX(player.getLocation().getDirection().getX() * 1.5);
-				vector.setZ(player.getLocation().getDirection().getZ() * 1.5);
+					double speed = 1.5;
 
-				minecart.setMaxSpeed(1.5);
-				minecart.setVelocity(vector);					
-				
+					Vector vector = minecart.getVelocity();
+
+					vector.setX(player.getLocation().getDirection().getX() * speed);
+					vector.setZ(player.getLocation().getDirection().getZ() * speed);
+
+					minecart.setMaxSpeed(speed);
+					minecart.setVelocity(vector);
+				}
 			}
 		}
 	}

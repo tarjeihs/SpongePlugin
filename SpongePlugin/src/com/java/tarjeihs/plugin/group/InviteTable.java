@@ -18,7 +18,7 @@ public class InviteTable extends GroupHandler {
 	}
 	
 	public void sendInvite(Player to, Player from) {
-		int groupId = getGroupId(from);
+		int groupId = getGroupID(from);
 		
 		executeUpdate("INSERT INTO invitetable (invited, inviter, groupId) VALUES (?, ?, ?)", new Object[]{
 				to.getUniqueId().toString(), from.getUniqueId().toString(), groupId

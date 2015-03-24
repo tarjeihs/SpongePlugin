@@ -8,7 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_8_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_8_R2.CraftServer;
 import org.bukkit.entity.Player;
 
 import com.java.tarjeihs.plugin.JPlugin;
@@ -131,6 +131,6 @@ public abstract class CommandHandler implements CommandExecutor, Colour {
 	protected User getUser() {
 		return user;
 	}
-
+	
 	public abstract boolean execute(User user, Command command, String[] args);
 }

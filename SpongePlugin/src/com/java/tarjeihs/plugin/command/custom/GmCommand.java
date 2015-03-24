@@ -1,26 +1,27 @@
 package com.java.tarjeihs.plugin.command.custom;
 
-import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
-import org.bukkit.entity.Player;
 
 import com.java.tarjeihs.plugin.JPlugin;
 import com.java.tarjeihs.plugin.command.CommandAnnotation;
 import com.java.tarjeihs.plugin.command.CommandHandler;
 import com.java.tarjeihs.plugin.user.User;
 
-public class ClearChatCommand extends CommandHandler {
+public class GmCommand extends CommandHandler {
 
-	public ClearChatCommand(JPlugin instance) {
+	public GmCommand(JPlugin instance) {
 		super(instance);
 	}
 
-	@CommandAnnotation(command="clearchat", rankRequired=2)
+	@CommandAnnotation(command = "gm", rankRequired = 3)
 	@Override
 	public boolean execute(User user, Command command, String[] args) {
-		for (int i = 0; i < 150; i++) {
-			for (Player players : Bukkit.getOnlinePlayers()) {
-				players.sendMessage("");
+		if (args.length == 0) {
+			if (player.getGameMode().equals(GameMode.SURVIVAL)) {
+				player.setGameMode(GameMode.CREATIVE);
+			} else if (player.getGameMode().equals(GameMode.CREATIVE)) {
+				player.setGameMode(GameMode.SURVIVAL);
 			}
 		}
 		return false;

@@ -13,7 +13,7 @@ public class SetSpawnCommand extends CommandHandler {
 		super(instance);
 	}
 
-	@CommandAnnotation(command="setspawn", rankRequired = 5, description = "Setter nytt spawnpoint.")
+	@CommandAnnotation(command="setspawn", rankRequired = 3, description = "Setter nytt spawnpoint.")
 	@Override
 	public boolean execute(User user, Command command, String[] args) {
 		player.getWorld().setSpawnLocation((int) player.getLocation().getX(),

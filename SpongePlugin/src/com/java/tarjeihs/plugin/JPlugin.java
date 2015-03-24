@@ -14,6 +14,7 @@ import com.java.tarjeihs.plugin.command.custom.AdminCommand;
 import com.java.tarjeihs.plugin.command.custom.CECommand;
 import com.java.tarjeihs.plugin.command.custom.ClearChatCommand;
 import com.java.tarjeihs.plugin.command.custom.DropCommand;
+import com.java.tarjeihs.plugin.command.custom.GmCommand;
 import com.java.tarjeihs.plugin.command.custom.GroupCommand;
 import com.java.tarjeihs.plugin.command.custom.HealCommand;
 import com.java.tarjeihs.plugin.command.custom.HelpCommand;
@@ -31,6 +32,7 @@ import com.java.tarjeihs.plugin.group.GroupHandler;
 import com.java.tarjeihs.plugin.group.InviteTable;
 import com.java.tarjeihs.plugin.listener.BlockListener;
 import com.java.tarjeihs.plugin.listener.EntityListener;
+import com.java.tarjeihs.plugin.listener.InventoryListener;
 import com.java.tarjeihs.plugin.listener.PlayerListener;
 import com.java.tarjeihs.plugin.listener.ServerListener;
 import com.java.tarjeihs.plugin.listener.VehicleListener;
@@ -41,12 +43,14 @@ import com.java.tarjeihs.plugin.user.UserHandler;
 import com.java.tarjeihs.plugin.utilities.Messenger;
 import com.java.tarjeihs.plugin.utilities.Regex;
 
-public class JPlugin extends JavaPlugin {
+public final class JPlugin extends JavaPlugin {
 	
 	private MySQLHandler sqlHandler = null;
 	private InviteTable inviteTable = new InviteTable(this);
 	private GroupHandler groupHandler = new GroupHandler(this);
 	private UserHandler userHandler = new UserHandler(this);
+	
+	private CustomItemLoader customItemLoader;
 	
 	private TeamBoard teamBoard = new TeamBoard();
 		
@@ -56,6 +60,7 @@ public class JPlugin extends JavaPlugin {
 	public String SERVER_MOTD;
 	public int SERVER_MAXIMUM_PLAYERS;
 	
+//	Loading up everything that is necessary for the plugin to run 
 	public void onEnable() {
 		this.initializeConfigurations();
 		
@@ -63,15 +68,17 @@ public class JPlugin extends JavaPlugin {
 		this.registerCommands();
 				
 		this.establishConnection();
+				
+		this.customItemLoader = new CustomItemLoader(this);
 		
-		new CustomItemLoader(this);
 		new Messenger(this);
 		
-		CustomItemLoader.addSuperAxeRecipe();
+		customItemLoader.addSuperAxeRecipe();
+		customItemLoader.addBackpackRecipe();
 		
 		this.userHandler.loadUsers(Bukkit.getOnlinePlayers());
-		this.groupHandler.loadGroup(Bukkit.getOnlinePlayers());
-		
+		this.groupHandler.loadGroups();
+			
 		loadBoards();
 								
 		Regex.println("Plugin is activated with no errors detected while loading.");
@@ -82,7 +89,6 @@ public class JPlugin extends JavaPlugin {
 
 		for (Player players : Bukkit.getOnlinePlayers()) {
 			this.userHandler.unloadUser(players);
-			this.groupHandler.unloadGroup(players);
 		}
 		
 		CommandHandler.getCommandMap().clearCommands();
@@ -102,6 +108,7 @@ public class JPlugin extends JavaPlugin {
 		pluginManager.registerEvents(new BlockListener(this), this);
 		pluginManager.registerEvents(new EntityListener(this), this);
 		pluginManager.registerEvents(new VehicleListener(this), this);
+		pluginManager.registerEvents(new InventoryListener(this), this);
 	}
 
 	/**
@@ -136,6 +143,8 @@ public class JPlugin extends JavaPlugin {
 		clearchatCommand.register();
 		CommandHandler iCommand = new ICommand(this);
 		iCommand.register();
+		CommandHandler gmCommand = new GmCommand(this);
+		gmCommand.register();
 	}
 
 	public void initializeConfigurations() {

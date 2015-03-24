@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.inventory.ItemStack;
 
+import com.java.tarjeihs.plugin.BlockID;
 import com.java.tarjeihs.plugin.JPlugin;
 import com.java.tarjeihs.plugin.command.CommandAnnotation;
 import com.java.tarjeihs.plugin.command.CommandHandler;
@@ -16,27 +17,49 @@ public class ICommand extends CommandHandler {
 		super(instance);
 	}
 
-	@CommandAnnotation(command="i", rankRequired = 5)
+	@CommandAnnotation(command="i", rankRequired = 3)
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean execute(User user, Command command, String[] args) {
 		if (args.length == 0) {
 			player.sendMessage("Ukjent argument: /i <itemID> <antall>|<data>");
 		} else if (args.length == 1) {
-			int stack = 1;
+			int stack = 64;
 			
 			ItemStack item = null;
 			
 			if (Regex.isInteger(args[0])) {
 				
-				item = new ItemStack(Material.getMaterial(Integer.parseInt(args[0])), stack);
-		
-			}
-					
-			if (item != null) {
+				if (Regex.isInteger(args[1])) {
 				
-				player.getInventory().addItem(item);
-			
+					item = new ItemStack(Material.getMaterial(Integer.parseInt(args[0])), stack);
+				
+				}
+				
+			} else {
+				
+				if (Regex.isInteger(args[1])) {
+					String name = args[0];
+				
+					Material material = null;
+				
+					for (BlockID blockID : BlockID.values()) {
+						if (name.equalsIgnoreCase(blockID.name())) {
+							material = Material.getMaterial(blockID.getID());
+						} else {
+							return false;
+						}
+					}
+				
+					item = new ItemStack(material, stack);
+					
+				}
+					
+				if (item != null) {
+				
+					player.getInventory().addItem(item);
+				
+				}
 			}
 			
 		} else if (args.length == 2) {

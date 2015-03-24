@@ -5,24 +5,49 @@ import java.util.UUID;
 
 import org.bukkit.Location;
 
+import com.java.tarjeihs.plugin.JPlugin;
+
 public class BankManager {
 	
 	/**
 	 * Creates instance of @BankManager
 	 * BankManager will manage every single Bank places around the map.
+	 * 
+	 * BankHandler is SQL stuff..
+	 * 
+	 * Account class shall be also managed from here!
 	 */
 	
-	private final HashMap<UUID, Location> bank = new HashMap<UUID, Location>();
+	private final HashMap<Location, UUID> storedBank = new HashMap<Location, UUID>();
+	
+	@SuppressWarnings("unused")
+	private JPlugin plugin;
+	
+	private BankHandler bankHandler;
+	
+	private AccountManager accountManager;
 	
 	public BankManager(UUID bankId) {
-
-	}
-	
-	public BankManager(Location location, UUID locationID) {
 		
 	}
 	
+	public BankManager(JPlugin plugin, Location location, UUID locationID) {
+		this.plugin = plugin;
+	}
+	
+	public AccountManager getAccountManager() {
+		return accountManager;
+	}
+	
 	public void loadBanks() {
+		for (int i = 0; i < bankHandler.getBanks().size(); i++) {
+			Bank bank = bankHandler.getBanks().get(i);
+			
+			storedBank.put(bank.getBankLocation(), bank.getUUID());
+		}
+	}
+	
+	public class AccountManager {
 		
 	}
 }

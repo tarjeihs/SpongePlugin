@@ -16,7 +16,7 @@ public class AdminCommand extends CommandHandler {
 		super(instance);
 	}
 
-	@CommandAnnotation(command = "adminchat", rankRequired = 3)
+	@CommandAnnotation(command = "adminchat", rankRequired = 2)
 	@Override
 	public boolean execute(User user, Command command, String[] args) {
 		if (args.length == 0) {

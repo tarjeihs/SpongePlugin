@@ -45,7 +45,7 @@ public class MySQLHandler {
 		this.url = (this.url + ":" + sql_Port + "/" + sql_Database);
 	}
 
-	public void initializeConnection() {
+	public synchronized void initializeConnection() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			if ((this.properties.isEmpty()) || (this.properties == null)) {

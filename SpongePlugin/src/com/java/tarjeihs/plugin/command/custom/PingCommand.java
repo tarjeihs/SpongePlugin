@@ -1,9 +1,9 @@
 package com.java.tarjeihs.plugin.command.custom;
 
-import net.minecraft.server.v1_8_R1.EntityPlayer;
+import net.minecraft.server.v1_8_R2.EntityPlayer;
 
 import org.bukkit.command.Command;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
 
 import com.java.tarjeihs.plugin.JPlugin;
 import com.java.tarjeihs.plugin.command.CommandAnnotation;

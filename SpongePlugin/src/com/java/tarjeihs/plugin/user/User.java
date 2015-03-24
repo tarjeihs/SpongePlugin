@@ -32,35 +32,53 @@ public class User implements UserAccessor {
 		this.rank = rank;
 	}
 
+	@Override
 	public String getName() {
 		return this.name;
 	}
 
+	@Override
 	public int getRank() {
 		return this.rank;
 	}
 
+	@Override
 	public UUID getUUID() {
 		return this.uuid;
 	}
 
+	@Override
 	public Player getPlayer() {
 		return this.player;
 	}
 
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	@Override
 	public void setRank(int rank) {
 		this.rank = rank;
 	}
-
+	
+	@Override
 	public void setUUID(UUID uuid) {
 		this.uuid = uuid;
 	}
 
+	@Override
 	public void setPlayer(Player player) {
 		this.player = player;
+	}
+	
+	@Override
+	public GameProfile getProfile() {
+		return null;
+	}
+
+	@Override
+	public void setProfile(GameProfile profile) {
+		
 	}
 }

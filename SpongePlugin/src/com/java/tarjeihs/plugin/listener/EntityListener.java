@@ -1,11 +1,13 @@
 package com.java.tarjeihs.plugin.listener;
 
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.java.tarjeihs.plugin.JPlugin;
@@ -47,6 +49,13 @@ public class EntityListener implements Listener {
 					event.setCancelled(true);
 				}
 			}
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onEntityExplode(EntityExplodeEvent event) {
+		if (event.getEntityType().equals(EntityType.CREEPER)) {
+			event.setCancelled(true);
 		}
 	}
 }

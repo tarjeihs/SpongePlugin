@@ -1,7 +1,6 @@
 package com.java.tarjeihs.plugin.utilities;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -15,12 +14,10 @@ public class Messenger {
 	
 	private static JPlugin plugin;
 	
-	private static Map<String, Long> spamFilter;
-	
+	public static HashMap<Player, Integer> spamFilter = new HashMap<Player, Integer>();
+		
 	public Messenger(JPlugin instance) {
 		plugin = instance;
-		
-		spamFilter = new HashMap<String, Long>();
 	}
 
 	public static String toMessage(int indexBegin, String[] msg) {
@@ -39,39 +36,39 @@ public class Messenger {
 	}
 	
 	public static boolean spam(Player player){
-		if (spamFilter.containsKey(player.getName())) {
-			long last = spamFilter.get(player.getName());
-			long time = System.currentTimeMillis() / 1000;
-			long calculateDifference = time - last;
-			
-			String convert = Long.toString(calculateDifference);
-			
-			int difference = Integer.parseInt(convert);
-			
-			if (difference > 10) {
-				return false;
-			} else if (difference < 10) {
-				spamFilter.remove(player.getName());
-				return true;
-				
-			}
-		} else {
-			spamFilter.put(player.getName(), System.currentTimeMillis() / 1000);
+		if (!spamFilter.containsKey(player)) {
+			spamFilter.put(player, (int) System.currentTimeMillis());
+			return false;
 		}
-		return false;
+		
+		int sec = (int) System.currentTimeMillis();
+		
+		if (sec - spamFilter.get(player) <= 2500) {
+			player.sendMessage("Altfor mange meldinger de 3~ siste sekundene.");
+			return true;
+		} else {
+			spamFilter.remove(player);
+			return false;
+		}
+	}
+	
+	public static String filterCodeMessage(String message) {
+		String returnMessage = message;
+		
+		// TODO work here!!!
+		
+		return returnMessage;
 	}
 	
 	public static void sendGroupMessage(Player player, String[] msg) {
 		GroupHandler groupHandler = plugin.getGroupHandler();
 		
-		if (groupHandler.getGroupData(player) == null) {
-			return;
-		}
-				
-		String groupName = groupHandler.getGroupData(player).getGroupName();
+		int groupId = groupHandler.getGroupID(player);
 		
-		for (String loop : groupHandler.getGroupData(player).getGroupMembers()) {
-			Player player_ = Bukkit.getPlayer(loop);
+		String groupName = groupHandler.getGroupData(groupId).getGroupName();
+		
+		for (String members : groupHandler.getGroupData(groupId).getGroupMembers()) {
+			Player player_ = Regex.findPlayer(members);
 			
 			if (player_ != null)
 				
@@ -83,14 +80,12 @@ public class Messenger {
 	public static void sendGroupMessage(Player player, String msg) {
 		GroupHandler groupHandler = plugin.getGroupHandler();
 		
-		if (groupHandler.getGroupData(player) == null) {
-			return;
-		}
+		int groupId = groupHandler.getGroupID(player);
 				
-		String groupName = groupHandler.getGroupData(player).getGroupName();
+		String groupName = groupHandler.getGroupData(groupId).getGroupName();
 		
-		for (String loop : groupHandler.getGroupData(player).getGroupMembers()) {
-			Player player_ = Bukkit.getPlayer(loop);
+		for (String loop : groupHandler.getGroupData(groupId).getGroupMembers()) {
+			Player player_ = Regex.findPlayer(loop);
 			
 			if (player_ != null)
 				

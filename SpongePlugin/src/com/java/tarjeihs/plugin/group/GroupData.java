@@ -1,10 +1,11 @@
 package com.java.tarjeihs.plugin.group;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-public class GroupData implements GroupAccessor {
+public class GroupData {
 	
 	private String groupName;
 	
@@ -23,52 +24,61 @@ public class GroupData implements GroupAccessor {
 		
 		this.members = new ArrayList<String>();
 	}
-	
-	@Override
+	/**
+	 * 
+	 * @return Name of the Group
+	 */
 	public String getGroupName() {
 		return this.groupName;
 	}
 	
-	public int getGroupID() {
-		return this.groupId;
-	}
-	
-	@Override
-	public void setGroupID(int id) {
-		this.groupId = id;
-	}
-	
-	@Override
 	public void setGroupName(String name) {
 		this.groupName = name;
 	}
 	
-	public int getGroupOwnerID() {
-		return groupOwnerID;
+	/**
+	 * Generated ID for the group
+	 * @return
+	 */
+	public int getGroupID() {
+		return this.groupId;
+	}
+	
+	public void setGroupID(int id) {
+		this.groupId = id;
 	}
 
-	@Override
 	public List<String> getGroupMembers() {
 		return members;
 	}
 
-	@Override
-	public void setGroupMembers(String player) {
+	public void addGroupMember(String player) {
 		this.members.add(player);
 	}
+	
+	public void addAllMembers(LinkedList<String> list) {
+		this.members.addAll(members);
+	}
 
-	@Override
 	public void removeGroupMember(String player) {
 		this.members.remove(player);
 	}
 
-	@Override
 	public UUID getGroupOwner() {
 		return groupOwner;
 	}
 
-	@Override
 	public void setGroupOwner(UUID owner) {
 		this.groupOwner = owner;
+	}
+	
+	public void deleteGroup() {
+		this.groupId = 0;
+		
+		this.groupOwner = null;
+		
+		this.groupName = null;
+	
+		this.members.clear();
 	}
 }

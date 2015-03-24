@@ -3,62 +3,75 @@ package com.java.tarjeihs.plugin.customitems;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
 
 import com.java.tarjeihs.plugin.JPlugin;
+import com.java.tarjeihs.plugin.customitems.sub.BackpackItem;
+import com.java.tarjeihs.plugin.customitems.sub.SuperAxeItem;
 
 public class CustomItemLoader {
 
-	private static JPlugin plugin;
+	private JPlugin plugin;
 	
-	private static HashMap<String,Integer> data = new HashMap<String, Integer>();;
+	private static final HashMap<String,Integer> data = new HashMap<String, Integer>();;
 	
 	public CustomItemLoader(JPlugin instance) 
 	{
-		plugin = instance;
+		this.plugin = instance;
 		
 	}
 	
-	@SuppressWarnings("deprecation")
-	public static void addSuperAxeRecipe() {
+	public void addSuperAxeRecipe() {
+		List<String> lore = new ArrayList<String>();
+		
+		lore.add("Super Axe");
+		lore.add("Kutter trær på ett slag");
+		lore.add("Ikke anbefalt for mindreåringer");
+				
+		ItemStack item = new ItemStack(Material.IRON_AXE); // Look of the item
+		
+		String name  = "Super Axe#"; // Name of the item
+		
+		addData(name); // Adding the MetaData to HashMap
+		
+		CustomItem superAxe = new SuperAxeItem(plugin, item, name + getID(name), lore, null); // Creating a new instance of our new Item
+		
+		superAxe.createCustomItemMeta(); // Loading all defaults for ItemMetaData
+	}
+	
+	public void addBackpackRecipe() {
 		List<String> lore = new ArrayList<String>();
 		List<Enchantment> enchantment = new ArrayList<Enchantment>();
 		
-		lore.add("Super Pick Axe");
-		lore.add("One shot trees");
-		lore.add("The pussy magnet");
-		lore.add("Micheal Jackson's exwife");
+		lore.add("-----------");
+		lore.add("Ryggsekk som kan bære over 32 itemslots");
+		lore.add("NB: Reduserer projektilskade med 20%");
+				
+		enchantment.add(Enchantment.PROTECTION_PROJECTILE);
 		
-		enchantment.add(Enchantment.WATER_WORKER);
+		ItemStack item = new ItemStack(Material.ENDER_CHEST); // Look of the item
 		
-		ItemStack item = new ItemStack(Material.IRON_AXE);
+		String name  = "Backpack#"; // Name of the item
 		
-		CustomItem customItem = new CustomItem(plugin, item, "Super Pick Axe", lore, enchantment) {
-			
-			@Override
-			public ShapedRecipe newShapedRecipe() {
-				ShapedRecipe recipe = new ShapedRecipe(getItem());					
-				return recipe.shape(new String[]{"DD ", "DR ", " R "}).setIngredient('D', Material.DIAMOND_BLOCK).setIngredient('R', Material.BLAZE_ROD);
-			}
-		};
+		addData(name); // Adding the MetaData to HashMap
 		
-		customItem.createCustomItemMeta();
-	
-		String name  = "SuperPickAxe";
+		CustomItem backpack = new BackpackItem(plugin, item, name + getID(name), lore, null); // Creating a new instance of our new Item
 		
-		addData(name, item.getTypeId());
+		backpack.createCustomItemMeta(); // Loading all defaults for ItemMetaData	
 	}
 	
 	public static Integer getID(String name) {
 		return (!(data.isEmpty()) ? data.get(name) : null);
 	}
 
-	private static void addData(String name, int typeId) {
-		data.put(name, typeId);
+	private static void addData(String name) {
+		int randomId = new Random().nextInt(5000-1000)+1000;
+		
+		data.put(name, randomId);
 	}
 	
 	public static HashMap<String, Integer> getIDs() {

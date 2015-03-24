@@ -3,4 +3,3 @@ main: com.java.tarjeihs.plugin.JPlugin
 version: 0.1
 description: A super cool plugin
 author: TJeb
-depend: [TitleManager]

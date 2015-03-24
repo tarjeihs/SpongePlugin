@@ -1,7 +1,11 @@
 package com.java.tarjeihs.plugin.utilities;
 
+import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 public class Regex {
 	
@@ -27,6 +31,17 @@ public class Regex {
 //			System.out.println(i + "/" + lengthOfObject);
 			System.out.println(Math.min(i, 100));
 		}
+	}
+	
+	public static Player findPlayer(String name) {
+		Collection<? extends Player> player = Bukkit.getOnlinePlayers();
+		for (Player players : player) {
+			if (players.getDisplayName().contains(name)) {
+				return players;
+			}
+		}
+		
+		return null;
 	}
 	
 	public static boolean isInteger(String s) {

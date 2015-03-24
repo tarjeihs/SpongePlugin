@@ -17,13 +17,13 @@ public class Bank {
 	 * Users may put in their money(which is a custom item), into this bank(owned by server).
 	 * @param location Where the Bank is located, there will exist multiple banks around the server.
 	 */
-	public Bank(Location location) {
-		
-		
+	public Bank(Location loc, UUID uuid) {
+		this.location = loc;
+		this.uuid = uuid;
 	}
 	
-	public void setBankLocation() {
-		
+	public void setBankLocation(Location newLocation) {
+		this.location = newLocation;
 	}
 	
 	public Location getBankLocation() {

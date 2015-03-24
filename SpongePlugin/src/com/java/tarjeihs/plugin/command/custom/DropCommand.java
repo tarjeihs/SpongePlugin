@@ -17,7 +17,7 @@ public class DropCommand extends CommandHandler {
 	}
 
 	@SuppressWarnings("deprecation")
-	@CommandAnnotation(command = "drop", rankRequired = 5)
+	@CommandAnnotation(command = "drop", rankRequired = 3)
 	@Override
 	public boolean execute(User user, Command command, String[] args) {
 		int[] itemArray = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};

@@ -10,15 +10,14 @@ import com.java.tarjeihs.plugin.command.CommandAnnotation;
 import com.java.tarjeihs.plugin.command.CommandHandler;
 import com.java.tarjeihs.plugin.user.User;
 
-import de.inventivegames.util.title.TitleManager;
-
 public class RankCommand extends CommandHandler {
 
 	public RankCommand(JPlugin instance) {
 		super(instance);
 	}
 
-	@CommandAnnotation(command = "rank", rankRequired = 5)
+	@SuppressWarnings("deprecation")
+	@CommandAnnotation(command = "rank", rankRequired = 3)
 	@Override
 	public boolean execute(User user, Command command, String[] args) {
 		if (args.length == 0) {
@@ -34,24 +33,20 @@ public class RankCommand extends CommandHandler {
 			
 			switch (rank) {
 			case 1:
-				rankType = "Gjest";
-				player.setOp(false);
-				break;
-			case 2:
 				rankType = "Bruker";
 				player.setOp(false);
 				break;
-			case 3:
-				rankType = "Utvikler";
-				player.setOp(false);
-				break;
-			case 4: 
+			case 2:
 				rankType = "Moderator";
 				player.setOp(false);
 				break;
-			case 5:
+			case 3:
 				rankType = "Administrator";
 				player.setOp(true);
+				break;
+			default:
+				rankType = "Bruker";
+				player.setOp(false);
 				break;
 			}
 			
@@ -60,9 +55,7 @@ public class RankCommand extends CommandHandler {
 			victim.setPlayerListName(this.userHandler.getSuffix(victim) + victim.getName());
 			
 			Bukkit.broadcastMessage(GOLD + "Spillerranken til " + victim.getName() + " har blitt forandret til " + rankType);			
-		
-			TitleManager.sendTitle(victim, 30, 50, 30, "{\"text\":\"\",\"extra\":[{\"text\":\"Gratulerer med ny rank!\",\"color\":\"blue\"}]}");
-			
+					
 			victim.playSound(victim.getLocation(), Sound.LEVEL_UP, 300, 300);
 		}
 		return false;

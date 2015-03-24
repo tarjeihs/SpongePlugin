@@ -8,8 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
-import net.md_5.bungee.api.ChatColor;
-
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class UserHandler extends MySQLAccessor {
@@ -22,22 +21,26 @@ public class UserHandler extends MySQLAccessor {
 	public void addUser(Player player) {
 		String query = "INSERT INTO `user` (`name`, `uuid`, `rank`) VALUES (?, ?, ?)";
 
-		executeUpdate(query, new Object[] { player.getName(), player.getUniqueId().toString(), 1});
+		executeUpdate(query, new Object[] { player.getName(),
+				player.getUniqueId().toString(), 1 });
 	}
 
 	public String getName(Player player) {
 		String query = "SELECT name FROM `user` WHERE name=?";
-		String name = get(query, new Object[] { player.getName() }, new Object[] { "name" });
+		String name = get(query, new Object[] { player.getName() 
+		}, new Object[] { 
+			"name" 
+		});
 		if (name == null) {
 			return "N/A";
 		}
 		return name;
 	}
-	
+
 	public boolean isIdenticalUUIDPlayer() {
 		return false;
 	}
-	
+
 	public void setVisitorMode(Player player) {
 		
 	}
@@ -48,22 +51,18 @@ public class UserHandler extends MySQLAccessor {
 		if (!(id > 0)) id = 1;
 		return id;
 	}
-	
+
 	public void setRank(Player victim, int rank) {
 		String query = "UPDATE user SET rank=? WHERE name=?";
-		
-		executeUpdate(query, new Object[]{rank, victim.getName()});
+
+		executeUpdate(query, new Object[] { rank, victim.getName() });
 	}
-	
+
 	public String getNameFromUUID(String uuid) {
 		String query = "SELECT name FROM user WHERE uuid=?";
-		
-		String name = get(query, new Object[]{
-				uuid
-		}, new Object[]{
-				"name"
-		});
-		
+
+		String name = get(query, new Object[] { uuid }, new Object[] { "name" });
+
 		return (name != null ? name : "Unknown User");
 	}
 
@@ -76,24 +75,18 @@ public class UserHandler extends MySQLAccessor {
 
 		return uuid_;
 	}
-	
+
 	public ChatColor getSuffix(Player player) {
 		int rank = getRank(player);
 		ChatColor suffix = null;
 		switch (rank) {
 		case 1:
-			suffix = ChatColor.GRAY;
-			break;
-		case 2:
 			suffix = ChatColor.YELLOW;
 			break;
+		case 2:
+			suffix = ChatColor.DARK_AQUA;
+			break;
 		case 3:
-			suffix = ChatColor.AQUA;
-			break;
-		case 4:
-			suffix = ChatColor.BLUE;
-			break;
-		case 5:
 			suffix = ChatColor.RED;
 			break;
 		default:
@@ -108,30 +101,28 @@ public class UserHandler extends MySQLAccessor {
 		String prefix = null;
 		switch (rank) {
 		case 1:
-			prefix = ChatColor.GRAY + "[Gjest] ";
-			break;
-		case 2:
 			prefix = ChatColor.YELLOW + "";
 			break;
+		case 2:
+			prefix = ChatColor.DARK_AQUA + "[" + ChatColor.AQUA + "Mod"
+					+ ChatColor.DARK_AQUA + "] ";
+			break;
 		case 3:
-			prefix = ChatColor.AQUA + "";
-			break;
-		case 4:
-			prefix = ChatColor.DARK_BLUE + "[" + ChatColor.BLUE + "Mod" + ChatColor.DARK_BLUE + "] ";
-			break;
-		case 5:
-			prefix = ChatColor.DARK_RED + "[" + ChatColor.RED + "Admin" + ChatColor.DARK_RED + "] ";
+			prefix = ChatColor.DARK_RED + "[" + ChatColor.RED + "Admin"
+					+ ChatColor.DARK_RED + "] ";
 			break;
 		default:
-			prefix = "";
+			prefix = ChatColor.YELLOW + "";
 		}
 		return prefix;
 	}
 
 	public String getUUID(Player player) {
 		String query = "SELECT uuid FROM `user` WHERE name=?";
-		String uuid = get(query, new Object[] { player.getName() }, new Object[] { "uuid" });
-		if (uuid == null) return "N/A";
+		String uuid = get(query, new Object[] { player.getName() },
+				new Object[] { "uuid" });
+		if (uuid == null)
+			return "N/A";
 		return uuid;
 	}
 
@@ -165,14 +156,16 @@ public class UserHandler extends MySQLAccessor {
 			return;
 		}
 		for (Player players : collection) {
-			User user = new User(getName(players), getUUID_(players), players, getRank(players));
+			User user = new User(getName(players), getUUID_(players), players,
+					getRank(players));
 			loadUser(players, user);
-		
+
 			players.setDisplayName(getPrefix(players) + players.getName());
 			players.setPlayerListName(getSuffix(players) + players.getName());
 		}
-		
-		Regex.println("Players has been loaded. Amount of players: " + userData.size());
+
+		Regex.println("Players has been loaded. Amount of players: "
+				+ userData.size());
 	}
 
 	public void loadUser(Player player, User user) {
