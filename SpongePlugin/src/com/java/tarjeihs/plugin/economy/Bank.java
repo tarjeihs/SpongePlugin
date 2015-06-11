@@ -1,14 +1,12 @@
 package com.java.tarjeihs.plugin.economy;
 
-import java.util.UUID;
-
 import org.bukkit.Location;
 
 public class Bank {
 	
 	private Location location;
 	
-	private UUID uuid;
+	private int id;
 	
 	/**
 	 * Creates a instanceof Bank class
@@ -17,9 +15,9 @@ public class Bank {
 	 * Users may put in their money(which is a custom item), into this bank(owned by server).
 	 * @param location Where the Bank is located, there will exist multiple banks around the server.
 	 */
-	public Bank(Location loc, UUID uuid) {
+	public Bank(Location loc, int id) {
 		this.location = loc;
-		this.uuid = uuid;
+		this.id = id;
 	}
 	
 	public void setBankLocation(Location newLocation) {
@@ -27,10 +25,14 @@ public class Bank {
 	}
 	
 	public Location getBankLocation() {
-		return (location != null ? location : null);
+		return location;
+	}
+
+	public final int getID() {
+		return id;
 	}
 	
-	public UUID getUUID() {
-		return (uuid != null ? uuid : null);
+	public void setId(int id) {
+		this.id = id;
 	}
 }

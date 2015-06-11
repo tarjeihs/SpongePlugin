@@ -30,42 +30,35 @@ public class ICommand extends CommandHandler {
 			
 			if (Regex.isInteger(args[0])) {
 				
-				if (Regex.isInteger(args[1])) {
 				
-					item = new ItemStack(Material.getMaterial(Integer.parseInt(args[0])), stack);
-				
-				}
+				item = new ItemStack(Material.getMaterial(Integer.parseInt(args[0])), stack);
 				
 			} else {
+				String name = args[0];
 				
-				if (Regex.isInteger(args[1])) {
-					String name = args[0];
+				Material material = null;
 				
-					Material material = null;
-				
-					for (BlockID blockID : BlockID.values()) {
-						if (name.equalsIgnoreCase(blockID.name())) {
-							material = Material.getMaterial(blockID.getID());
-						} else {
-							return false;
-						}
+				for (BlockID blockID : BlockID.values()) {
+					if (name.equalsIgnoreCase(blockID.getName())) {
+						material = Material.getMaterial(blockID.getID());
 					}
-				
-					item = new ItemStack(material, stack);
-					
 				}
+				
+				item = new ItemStack(material, stack);
 					
-				if (item != null) {
+			}
+					
+			if (item != null) {
+			
+				player.getInventory().addItem(item);
 				
-					player.getInventory().addItem(item);
-				
-				}
 			}
 			
 		} else if (args.length == 2) {
 			
 			if (!Regex.isInteger(args[1])) {
 				player.sendMessage("Ukjent argument /i <itemID> <antall>|<data>");
+				return false;
 			}
 			
 			int stack = Integer.parseInt(args[1]);
@@ -76,6 +69,20 @@ public class ICommand extends CommandHandler {
 				
 				item = new ItemStack(Material.getMaterial(Integer.parseInt(args[0])), stack);
 		
+			} else {
+				
+				String name = args[0];
+				
+				Material material = null;
+				
+				for (BlockID blockID : BlockID.values()) {
+					if (name.equalsIgnoreCase(blockID.getName())) {
+						material = Material.getMaterial(blockID.getID());
+					}
+				}
+				
+				item = new ItemStack(material, stack);
+				
 			}
 			
 			if (item != null) {

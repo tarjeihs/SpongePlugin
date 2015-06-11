@@ -35,7 +35,7 @@ public class TeamBoard {
 				
 		for (Player players : Bukkit.getOnlinePlayers()) {
 			players.setScoreboard(board);
-			players.setHealth(players.getHealthScale());
+			players.setHealth(players.getHealth() - 0.0);
 		}
 	}
 }

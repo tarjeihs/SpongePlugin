@@ -101,7 +101,7 @@ public class TitlePacket extends Packet {
 				
 				Object[] actions = packetActions.getEnumConstants();
 				Method sendPacket = getMethod(connection.getClass(), "sendPacket");
-				
+								
 				Object packet = packetTitle.getConstructor(packetActions, chatBaseComponent,
 						Integer.TYPE, Integer.TYPE, 
 						Integer.TYPE).newInstance(actions[2], null, a * (ticks ? 1:20),

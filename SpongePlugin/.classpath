@@ -6,5 +6,7 @@
 	<classpathentry kind="lib" path="C:/Users/TARJEI/Desktop/sponge/craftbukkit-1.8.3.jar"/>
 	<classpathentry kind="lib" path="C:/Users/TARJEI/Desktop/sponge/BuildTools.jar"/>
 	<classpathentry kind="lib" path="C:/Users/TARJEI/Desktop/sponge/spigot.jar"/>
+	<classpathentry kind="lib" path="C:/Users/TARJEI/Desktop/sponge/plugins/citizens-2.0.15-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/Users/TARJEI/Documents/eclipse utilities/sponge 1.8/craftbukkit.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

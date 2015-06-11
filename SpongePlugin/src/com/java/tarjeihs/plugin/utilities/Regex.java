@@ -27,7 +27,7 @@ public class Regex {
 	}
 	
 	public static final void progress(int lengthOfObject) {
-		for (int i = 0; i < lengthOfObject; i++) {
+		for (int i = 100; i > lengthOfObject; i++) {
 //			System.out.println(i + "/" + lengthOfObject);
 			System.out.println(Math.min(i, 100));
 		}
@@ -45,7 +45,7 @@ public class Regex {
 	}
 	
 	public static boolean isInteger(String s) {
-	    return isInteger(s,5);
+	    return isInteger(s, 5);
 	}
 
 	public static boolean isInteger(String s, int radix) {

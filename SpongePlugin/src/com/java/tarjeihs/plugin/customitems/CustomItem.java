@@ -1,11 +1,13 @@
 package com.java.tarjeihs.plugin.customitems;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.java.tarjeihs.plugin.JPlugin;
@@ -22,12 +24,12 @@ public abstract class CustomItem {
 	
 	private List<Enchantment> enchantment;
 	
-	public CustomItem(JPlugin plugin, ItemStack item, String name, List<String> lore, List<Enchantment> enchantment) {
+	public CustomItem(JPlugin plugin, ItemStack item, String name) {
 		this.plugin = plugin;
 		this.itemStack = item;
 		this.name = name;
-		this.lore = lore;
-		this.enchantment = enchantment;
+		this.lore = new ArrayList<String>();
+		this.enchantment = new ArrayList<Enchantment>();
 	}
 	
 	public ItemStack getItem() {
@@ -42,16 +44,20 @@ public abstract class CustomItem {
 		return this.name;
 	}
 	
-	protected void setLore(List<String> lore) {
-		this.lore = lore;
+	protected CustomItem setLore(String lore) {
+		this.lore.add(lore);
+		
+		return this;
 	}
 	
 	public List<String> getLore() {
 		return this.lore;
 	}
 	
-	protected void addEnchantment(List<Enchantment> e) {
-		this.enchantment = e;
+	protected CustomItem addEnchantment(Enchantment e) {
+		this.enchantment.add(e);
+		
+		return this;
 	}
 	
 	public List<Enchantment> getEnchantments() {
@@ -68,13 +74,15 @@ public abstract class CustomItem {
 		
 		if (enchantment != null) {
 			for (Enchantment enchantment : enchantment) {
-				meta.addEnchant(enchantment, 0, true);
+				meta.addEnchant(enchantment, 2, true);
 			}
 		}
 		
 		itemStack.setItemMeta(meta);
-		
-		Bukkit.getServer().addRecipe(newShapedRecipe());
+			
+		Bukkit.getServer().addRecipe(newShapedRecipe() == null ? 
+				newShapelessRecipe() : newShapedRecipe());
+				
 	}
 	
 	public JPlugin getPlugin() {
@@ -82,4 +90,6 @@ public abstract class CustomItem {
 	}
 	
 	public abstract ShapedRecipe newShapedRecipe();
+	
+	public abstract ShapelessRecipe newShapelessRecipe();
 }

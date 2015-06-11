@@ -18,4 +18,6 @@ public interface Colour {
   
   static final ChatColor DGREEN = ChatColor.DARK_GREEN;
   
+  static final ChatColor GRAY = ChatColor.GRAY;
+  
 }

@@ -174,8 +174,6 @@ public class GroupHandler extends MySQLAccessor {
 			getGroupData(groupId).deleteGroup();
 			
 			delGroup(player, groupId);
-			
-			return;
 		}
 		
 		String query = "DELETE FROM GROUPUSERTABLE WHERE uuid=?";
@@ -193,7 +191,10 @@ public class GroupHandler extends MySQLAccessor {
 		String query = "SELECT groupOwner FROM GROUPTABLE WHERE id=?";
 		
 		String uuid = UUID.fromString(
-				get(query, new Object[] { id }, new Object[] { "groupOwner" }))
+				get(query, new Object[] {
+						id }, 
+					new Object[] {
+						"groupOwner" }))
 				.toString();
 		
 		return uuid;
@@ -212,7 +213,7 @@ public class GroupHandler extends MySQLAccessor {
 		return (id != 0 ? id : -1);
 	}
 	
-	private class LoadGroups implements Runnable {
+	private class GroupLoader implements Runnable {
 		public void run() {
 			String query = "SELECT * FROM GROUPTABLE";
 			
@@ -239,9 +240,11 @@ public class GroupHandler extends MySQLAccessor {
 							groupId);
 					
 
-					for (String members : getMembersFromDB(groupId)) {
-						groupData.addGroupMember(members);
-					}
+//					for (String members : getMembersFromDB(groupId)) {
+//						groupData.addGroupMember(members);
+//					}
+				
+					groupData.addAllMembers(getMembersFromDB(groupId));
 					
 					loadGroup(groupId, groupData);					
 				}
@@ -255,7 +258,7 @@ public class GroupHandler extends MySQLAccessor {
 	}
 	
 	public void loadGroups() {
-		Thread thread = new Thread(new LoadGroups());
+		Thread thread = new Thread(new GroupLoader());
 		synchronized (thread) {
 			if (!thread.isAlive()) 
 				thread.start();
@@ -272,7 +275,6 @@ public class GroupHandler extends MySQLAccessor {
 //		PreparedStatement ps = null;
 //		ResultSet rs = null;
 //		
-//		Bukkit.broadcastMessage("test");
 //		
 //		try {
 //			conn = getConnection();
@@ -293,9 +295,6 @@ public class GroupHandler extends MySQLAccessor {
 //				
 //				groupData.addAllMembers(getMembersFromDB(groupId));
 //				
-//				for (String s : groupData.getGroupMembers()) {
-//					Bukkit.broadcastMessage(s);
-//				}
 //			}
 //		} catch (SQLException e) {
 //			e.printStackTrace();

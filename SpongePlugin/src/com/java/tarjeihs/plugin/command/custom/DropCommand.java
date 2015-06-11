@@ -20,7 +20,9 @@ public class DropCommand extends CommandHandler {
 	@CommandAnnotation(command = "drop", rankRequired = 3)
 	@Override
 	public boolean execute(User user, Command command, String[] args) {
-		int[] itemArray = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+		int[] itemArray = {264, 266, 281,
+				310, 320, 319,
+				};
 		
 		World world = player.getWorld();
 			

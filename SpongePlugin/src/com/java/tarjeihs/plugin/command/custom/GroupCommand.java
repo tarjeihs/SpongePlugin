@@ -16,7 +16,7 @@ public class GroupCommand extends CommandHandler {
 		super(instance);
 	}
 
-	@CommandAnnotation(command = "group", description = "Kommando for gruppefunksjon", rankRequired = 1)
+	@CommandAnnotation(command = "group", description = "Kommando for gruppefunksjon", rankRequired = 1, aliases = "g")
 	@Override
 	public boolean execute(User user, Command command, String[] args) {
 		if (args.length == 0) {
@@ -43,7 +43,8 @@ public class GroupCommand extends CommandHandler {
 						}
 					}
 					
-					player.sendMessage(BLUE + "Medlemmer: " + WHITE + ((!(members.size() > 1)) ? builder.substring(builder.length() - 2) : builder.toString()));
+//					player.sendMessage(BLUE + "Medlemmer: " + WHITE + ((!(members.size() > 1)) ? builder.substring(0, builder.length() - 2) : builder.toString()));
+					player.sendMessage(BLUE + "Medlemmer: " + WHITE + builder.toString());
 					
 					player.sendMessage("\n"); // Just to create some space
 				} else {

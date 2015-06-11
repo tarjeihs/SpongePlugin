@@ -11,7 +11,7 @@ public class ReadCommandAnnotation {
 	
 	private String command;
 	private String description;
-	private String[] aliases;
+	private String aliases;
 
 	private boolean useable;
 	private int rank;
@@ -34,11 +34,11 @@ public class ReadCommandAnnotation {
 		}
 	}
 
-	public String[] getAliases() {
+	public String getAliases() {
 		if (this.aliases != null) {
 			return this.aliases;
 		}
-		return new String[] { DEFAULT_ERROR };
+		return DEFAULT_ERROR ;
 	}
 
 	public String getCommand() {

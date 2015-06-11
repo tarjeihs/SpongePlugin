@@ -2,19 +2,33 @@ package com.java.tarjeihs.plugin.economy;
 
 import java.util.UUID;
 
-public class Account extends BankManager {
+public class Account {
 
-	public Account(UUID userID) {
-		super(userID);
-	}
-
-	private String name;
-
-	public String getName() {
-		return name;
+	private UUID uuid;
+	private int currency;
+	
+	public Account(UUID uuid) {
+		this.uuid = uuid;
 	}
 	
-	public void setName(String name) {
-		this.name = name;
+	public Account(UUID uuid, int currency) {
+		this.uuid = uuid;
+		this.currency = currency;
+	}
+	
+	public UUID getUUID() {
+		return uuid;
+	}
+	
+	public void setUUID(UUID uuid) {
+		this.uuid = uuid;
+	}
+	
+	public int getCurrency() {
+		return currency;
+	}
+	
+	public void setCurrency(int curr) {
+		this.currency = curr;
 	}
 }

@@ -5,44 +5,86 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 
 import com.java.tarjeihs.plugin.JPlugin;
 import com.java.tarjeihs.plugin.mysql.MySQLAccessor;
+import com.java.tarjeihs.plugin.utilities.Regex;
 
 public class BankHandler extends MySQLAccessor {
 
-	public static final String SERVER_BANK = "SERVER_BANK";
-	public static final int SERVER_ID = 1;
+	private final List<Bank> banks;
+	private final HashMap<UUID, Account> accounts;
+	
+	private AccountHandler accountHandler;
 	
 	public BankHandler(JPlugin instance) {
 		super(instance);
-	}
-	
-	@SuppressWarnings("unused")
-	public Location getLocation(UUID uuid) {
-		int x = 1;
-		int y = 1;
-		int z = 1;
 		
-		return null;
+		banks = new ArrayList<Bank>();
+		accounts = new HashMap<UUID, Account>();
 	}
 	
-	public UUID getUID(Location location) {
-		return null;
+	public HashMap<UUID, Account> getAccounts() {
+		return accounts;
 	}
 	
-	@SuppressWarnings("unused")
+	public void addAccount(UUID uuid, Account account) {
+		if (this.accounts.containsKey(uuid)) return;
+		
+		this.accounts.put(uuid, account);
+	}
+	
+	public boolean isBank(Location loc) {
+		for (Bank bank : banks) {
+			if (bank.getBankLocation().equals(loc)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void createBank(Location location) {
+		World world = location.getWorld();
+		int x = location.getBlockX();
+		int y = location.getBlockY();
+		int z = location.getBlockZ();
+		
+		String query = "INSERT INTO bank (world, x, y, z) VALUES (?, ?, ?, ?)";
+		
+		int id = executeUpdate(query, new Object[]{
+				world.getName().toString(), x, y, z
+		});
+		
+		Bank bank = new Bank(location, id);
+	
+		addBank(bank);
+	}
+	
+	public void loadBanks() {
+		for (Bank bank : getBanks()) {
+			addBank(bank);
+		}
+	}
+	
+	private void addBank(Bank bank) {
+		if (this.banks == null) return;
+		
+		if (this.banks.contains(bank)) return;
+		
+		this.banks.add(bank);
+	}
+	
 	public List<Bank> getBanks() {
-		String query = "SELECT * FROM BANK";
+		List<Bank> list = new ArrayList<Bank>();
 		
-		List<Bank> banks = new ArrayList<Bank>();
-	
-		UUID uuid = null;
+		String query = "SELECT * FROM BANK";
 		
 		Connection conn = null;
 		PreparedStatement ps = null;
@@ -50,29 +92,34 @@ public class BankHandler extends MySQLAccessor {
 		
 		try {
 			conn = getConnection();
-			ps = conn.prepareStatement("SELECT * FROM bank");
+			ps = conn.prepareStatement(query);
+			
 			rs = ps.executeQuery();
 			
 			while (rs.next()) {
-				String uuid_ = rs.getString("uuid");
+				int id = rs.getInt("id");
 				
-				String world = rs.getString("world");
-				
+				World world = Bukkit.getWorld(rs.getString("world"));
+								
 				int x = rs.getInt("x");
 				int y = rs.getInt("y");
 				int z = rs.getInt("z");
 				
-				Location location = new Location(Bukkit.getWorld(world), x, y, z);
+				Bank bank = new Bank(new Location(world, x, y, z), id);
 				
-				Bank bank = new Bank(location, UUID.fromString(uuid_));
-				
-				banks.add(bank);
+				list.add(bank);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			Regex.println(e.getMessage());
+		} finally {
+			if (ps != null) { try { ps.close(); ps = null; } catch (SQLException ignored) {}}
+			if (rs != null) { try { rs.close(); rs = null; } catch (SQLException ignored) {}}
 		}
-
 		
-		return banks;
+		return list;
+	}
+	
+	public AccountHandler getAccountHandler() {
+		return accountHandler;
 	}
 }

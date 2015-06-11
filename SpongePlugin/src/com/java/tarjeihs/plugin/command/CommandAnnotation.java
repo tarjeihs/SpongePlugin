@@ -13,7 +13,7 @@ public @interface CommandAnnotation {
 
 	String 		command() 		default DEFAULT_MESSAGE;
 
-	String[] 	aliases() 		default { DEFAULT_MESSAGE };
+	String 	aliases() 			default  DEFAULT_MESSAGE ;
 
 	String 		description() 	default DEFAULT_MESSAGE;
 

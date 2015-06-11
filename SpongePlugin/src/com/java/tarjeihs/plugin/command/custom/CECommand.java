@@ -33,6 +33,12 @@ public class CECommand extends CommandHandler {
 		}
 		
 		player.sendMessage("Fjernet " + counter + " entities.");
+		
+//		PacketPlayOutNamedSoundEffect packet = new PacketPlayOutNamedSoundEffect("note.snare", player.getLocation().getX(), player.getLocation().getY(),
+//				player.getLocation().getY(), 100F, 200F);
+//		
+//		((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+				
 		return false;
 	}
 }

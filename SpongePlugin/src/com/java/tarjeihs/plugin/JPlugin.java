@@ -2,8 +2,14 @@ package com.java.tarjeihs.plugin;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -11,6 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.java.tarjeihs.plugin.command.CommandHandler;
 import com.java.tarjeihs.plugin.command.StoredCommand;
 import com.java.tarjeihs.plugin.command.custom.AdminCommand;
+import com.java.tarjeihs.plugin.command.custom.NPCComand;
 import com.java.tarjeihs.plugin.command.custom.CECommand;
 import com.java.tarjeihs.plugin.command.custom.ClearChatCommand;
 import com.java.tarjeihs.plugin.command.custom.DropCommand;
@@ -25,9 +32,11 @@ import com.java.tarjeihs.plugin.command.custom.RankCommand;
 import com.java.tarjeihs.plugin.command.custom.ServerCommand;
 import com.java.tarjeihs.plugin.command.custom.SetSpawnCommand;
 import com.java.tarjeihs.plugin.command.custom.SpawnCommand;
+import com.java.tarjeihs.plugin.command.custom.TpaCommand;
 import com.java.tarjeihs.plugin.configuration.ConfigurationFile;
 import com.java.tarjeihs.plugin.configuration.SQLReference;
 import com.java.tarjeihs.plugin.customitems.CustomItemLoader;
+import com.java.tarjeihs.plugin.economy.AccountHandler;
 import com.java.tarjeihs.plugin.group.GroupHandler;
 import com.java.tarjeihs.plugin.group.InviteTable;
 import com.java.tarjeihs.plugin.listener.BlockListener;
@@ -45,22 +54,30 @@ import com.java.tarjeihs.plugin.utilities.Regex;
 
 public final class JPlugin extends JavaPlugin {
 	
+	private final String worldPvp = "world_pvp";
+
+	private final String worldCreative = "world_creative";
+		
 	private MySQLHandler sqlHandler = null;
 	private InviteTable inviteTable = new InviteTable(this);
 	private GroupHandler groupHandler = new GroupHandler(this);
 	private UserHandler userHandler = new UserHandler(this);
+	private AccountHandler accountHandler = new AccountHandler(this);
 	
-	private CustomItemLoader customItemLoader;
+	private CustomItemLoader customItemLoader = new CustomItemLoader(this);
+	
+	private HashSet<Player> bankInventory = new HashSet<Player>();
+	
+	private HashMap<Player, Player> tpaMap = new HashMap<Player, Player>();
 	
 	private TeamBoard teamBoard = new TeamBoard();
-		
+			
 	private ConfigurationFile sqlConfig;
 	private ConfigurationFile serverConfig;
 
 	public String SERVER_MOTD;
 	public int SERVER_MAXIMUM_PLAYERS;
 	
-//	Loading up everything that is necessary for the plugin to run 
 	public void onEnable() {
 		this.initializeConfigurations();
 		
@@ -68,14 +85,19 @@ public final class JPlugin extends JavaPlugin {
 		this.registerCommands();
 				
 		this.establishConnection();
+		
+		this.customItemLoader.addCoinItem();
+		
+		WorldCreator.name(worldPvp).createWorld();
+		WorldCreator.name(worldCreative).createWorld();
+		
+		this.accountHandler.loadBanks();
+		this.accountHandler.loadAccounts();
 				
-		this.customItemLoader = new CustomItemLoader(this);
+		startTaskCleanupWorld();
 		
 		new Messenger(this);
-		
-		customItemLoader.addSuperAxeRecipe();
-		customItemLoader.addBackpackRecipe();
-		
+										
 		this.userHandler.loadUsers(Bukkit.getOnlinePlayers());
 		this.groupHandler.loadGroups();
 			
@@ -86,10 +108,12 @@ public final class JPlugin extends JavaPlugin {
 
 	public void onDisable() {
 		this.sqlHandler.closeConnection();
-
+		
 		for (Player players : Bukkit.getOnlinePlayers()) {
 			this.userHandler.unloadUser(players);
 		}
+		
+		this.accountHandler.saveAccount();
 		
 		CommandHandler.getCommandMap().clearCommands();
 		StoredCommand.clearCommands();
@@ -145,9 +169,36 @@ public final class JPlugin extends JavaPlugin {
 		iCommand.register();
 		CommandHandler gmCommand = new GmCommand(this);
 		gmCommand.register();
+		CommandHandler npcCommand = new NPCComand(this);
+		npcCommand.register();
+		TpaCommand tpaCommand = new TpaCommand(this);
+		tpaCommand.register();
 	}
 
+	private void startTaskCleanupWorld() {
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+			int counter;
+
+			public void run() {
+				for (World world : getServer().getWorlds()) {
+					for (Entity e : world
+							.getEntities()) {
+						if (e instanceof Item || e instanceof Arrow) {
+							e.remove();
+							counter++;
+						}
+					}
+				}
+				Regex.println("Fjernet " + counter + " entities");
+				
+				counter = 0;
+			}
+		}, 100L, 7000L);
+	}
+	
+
 	public void initializeConfigurations() {
+//		Configuration for SQL
 		HashMap<String, Object> sqlConfig = new HashMap<String, Object>();
 
 		sqlConfig.put("sql.database.host", "default");
@@ -164,6 +215,9 @@ public final class JPlugin extends JavaPlugin {
 		SQLReference.MYSQL_DATABASE_USERNAME = this.sqlConfig.getConfig().getString("sql.database.username");
 		SQLReference.MYSQL_DATABASE_PASSWORD = this.sqlConfig.getConfig().getString("sql.database.password");
 		SQLReference.MYSQL_DATABASE_PORT = this.sqlConfig.getConfig().getInt("sql.database.port");
+		
+		
+//		Configuration for server
 		
 		HashMap<String, Object> config = new HashMap<String, Object>();
 		
@@ -212,5 +266,17 @@ public final class JPlugin extends JavaPlugin {
 	
 	public TeamBoard getTeamBoard() {
 		return teamBoard;
+	}
+	
+	public AccountHandler getAccountHandler() {
+		return accountHandler;
+	}
+	
+	public HashSet<Player> getBankInventory() {
+		return bankInventory;
+	}
+
+	public HashMap<Player, Player> getTpaMap() {
+		return tpaMap;
 	}
 }

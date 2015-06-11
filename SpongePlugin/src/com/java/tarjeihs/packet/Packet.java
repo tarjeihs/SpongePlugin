@@ -50,8 +50,7 @@ public class Packet {
 		}
 	}
 
-	public Method getMethod(String name, Class<?> clazz,
-			Class<?>... paramTypes) {
+	public Method getMethod(String name, Class<?> clazz, Class<?>... paramTypes) {
 		Class<?>[] t = toPrimitiveTypeArray(paramTypes);
 		for (Method m : clazz.getMethods()) {
 			Class<?>[] types = toPrimitiveTypeArray(m.getParameterTypes());

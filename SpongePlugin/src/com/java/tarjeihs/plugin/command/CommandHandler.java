@@ -12,6 +12,7 @@ import org.bukkit.craftbukkit.v1_8_R2.CraftServer;
 import org.bukkit.entity.Player;
 
 import com.java.tarjeihs.plugin.JPlugin;
+import com.java.tarjeihs.plugin.economy.AccountHandler;
 import com.java.tarjeihs.plugin.group.GroupHandler;
 import com.java.tarjeihs.plugin.group.InviteTable;
 import com.java.tarjeihs.plugin.user.User;
@@ -21,22 +22,20 @@ import com.java.tarjeihs.plugin.utilities.Regex;
 public abstract class CommandHandler implements CommandExecutor, Colour {
 	
 	private String command = "I/T";
-	private String[] aliases = null;
+	private String aliases = null;
 	private String description = "I/T";
 	private int rank = 1;
 	private boolean use = true;
 	
 	private User user = null;
-	
-	protected JPlugin plugin = null;
-	
 	protected Player player = null;
-	
+
+	protected JPlugin plugin = null;
+
 	protected GroupHandler groupHandler = null;
-	
 	protected InviteTable inviteTable = null;
-	
 	protected UserHandler userHandler = null;
+	protected AccountHandler accountHandler = null;
 	
 	private final ReadCommandAnnotation readAnnotation = new ReadCommandAnnotation(getClass());
 	private static CommandMap commandMap = null;
@@ -61,13 +60,15 @@ public abstract class CommandHandler implements CommandExecutor, Colour {
 		
 		this.inviteTable = this.groupHandler.getInviteTable();
 		
+		this.accountHandler = instance.getAccountHandler();
+		
 		this.readAnnotation.register();
 
 		this.command = this.readAnnotation.getCommand();
-		this.aliases = this.readAnnotation.getAliases();
 		this.description = this.readAnnotation.getDescription();
 		this.rank = this.readAnnotation.getRank();
 		this.use = this.readAnnotation.isUseable();
+		this.aliases = this.readAnnotation.getAliases();
 	}
 
 	public void register() {
@@ -76,13 +77,12 @@ public abstract class CommandHandler implements CommandExecutor, Colour {
 		if (this.command != null) regCommand.setExecutor(this);
 		if (this.aliases != null) regCommand.setAliases(Arrays.asList(this.aliases));
 		if (this.description != null) regCommand.setDescription(this.description);
-		
+				
 		if (use) {
-			if (description != "I/T" || description != null)
-				StoredCommand.addCommand(command, description);
+			StoredCommand.addCommand(command, description);
 		}
 	}
-
+	
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		if (this.use) {
 			if (sender instanceof Player) {
@@ -131,6 +131,6 @@ public abstract class CommandHandler implements CommandExecutor, Colour {
 	protected User getUser() {
 		return user;
 	}
-	
+		
 	public abstract boolean execute(User user, Command command, String[] args);
 }

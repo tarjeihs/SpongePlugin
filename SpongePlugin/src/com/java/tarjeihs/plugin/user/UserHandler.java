@@ -165,7 +165,7 @@ public class UserHandler extends MySQLAccessor {
 		}
 
 		Regex.println("Players has been loaded. Amount of players: "
-				+ userData.size());
+				+ userData.size() + "/" + collection.size());
 	}
 
 	public void loadUser(Player player, User user) {

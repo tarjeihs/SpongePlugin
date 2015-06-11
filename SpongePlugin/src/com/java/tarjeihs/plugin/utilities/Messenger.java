@@ -94,16 +94,16 @@ public class Messenger {
 		}
 	}
 
-	public static String removeChar(String msg, char remove) {
-		StringBuilder builder = new StringBuilder();
-		
-		char[] x = msg.toCharArray();
-		for (int i = 0; i < x.length; i++) {
-			if (x[i] != remove) {
-				builder.append(x);
-			}
-		}
-		
-		return builder.toString();
-	}
+//	public static String removeChar(String msg, char remove) {
+//		StringBuilder builder = new StringBuilder();
+//		
+//		char[] x = msg.toCharArray();
+//		for (int i = 0; i < x.length; i++) {
+//			if (x[i] != remove) {
+//				builder.append(x);
+//			}
+//		}
+//		
+//		return builder.toString();
+//	}
 }
